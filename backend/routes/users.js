@@ -49,6 +49,7 @@ router.post("/login", (req, res) => {
     const email = req.body.email;
     const username = req.body.username;
     const pass = req.body.password;
+
     // Find user by email or username
     // [{email}, {username}] same as [{'email':email}, {'username':username}]
     User.findOne({ $or: [{ email }, { username }] }).then((user) => {
