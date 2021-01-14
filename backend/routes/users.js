@@ -55,4 +55,15 @@ router.post("/login", (req, res) => {
     });
 });
 
+// POST request
+// Update Contact Number
+router.post("/updateNumber", (req, res) => {
+    const username = req.body.username;
+    const contact_number = req.body.contact_number;
+    console.log(username, contact_number);
+    User.findOneAndUpdate({ username }, { contact_number }, (err, result) => {
+        err ? res.status(500).json({ err }) : res.status(200).json({ result });
+    });
+});
+
 module.exports = router;
