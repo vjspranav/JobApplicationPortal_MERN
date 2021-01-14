@@ -32,11 +32,12 @@ router.post("/login", (req, res) => {
     const email = req.body.email;
     const username = req.body.username;
     const pass = req.body.password;
-    // Find user by email
-    User.findOne({ email, username }).then((user) => {
+    // Find user by email or username
+    // [{email}, {username}] same as [{'email':email}, {'username':username}]
+    User.findOne({ $or: [{ email }, { username }] }).then((user) => {
         // Check if user email exists
         if (!user) {
-            return res.status(404).json({
+            return res.status(401).json({
                 error: "Email not found",
             });
         } else {
@@ -46,7 +47,7 @@ router.post("/login", (req, res) => {
                 });
                 return user;
             } else {
-                return res.status(404).json({
+                return res.status(401).json({
                     error: "Password wrong",
                 });
             }
