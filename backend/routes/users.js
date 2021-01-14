@@ -3,6 +3,8 @@ var router = express.Router();
 
 // Load User model
 const User = require("../models/users");
+const Applicant = require("../models/applicants");
+const Recruiter = require("../models/recruiters");
 
 // POST request
 // Add a user to db
@@ -12,14 +14,29 @@ router.post("/register", (req, res) => {
         name: req.body.name,
         username: req.body.username,
         email: req.body.email,
+        type: req.body.type,
         password: req.body.password,
         date: req.body.date ? req.body.date : today,
     });
-
+    const typeUser =
+        newUser.type == "applicant" ?
+        new Applicant({
+            username: newUser.username,
+        }) :
+        new Recruiter({
+            username: newUser.username,
+        });
     newUser
         .save()
         .then((user) => {
-            res.status(200).json(user);
+            typeUser
+                .save()
+                .then((tu) => {
+                    res.status(200).json(user);
+                })
+                .catch((err) => {
+                    res.status(400).send(err);
+                });
         })
         .catch((err) => {
             res.status(400).send(err);
