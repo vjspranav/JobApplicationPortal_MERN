@@ -60,6 +60,7 @@ router.post("/login", (req, res) => {
             });
         } else {
             if (pass === user.password) {
+                req.session.user = user;
                 res.status(200).json({
                     details: "Login Successfull",
                 });
@@ -74,11 +75,28 @@ router.post("/login", (req, res) => {
 });
 
 // POST request
+// Login
+router.post("/logout", (req, res) => {
+    if (!req.session.user)
+        return res.status(500).json({ status: "No User Logged in" });
+    req.session.destroy((err) => {
+        res.status(500).json(err);
+    });
+    res.status(200).json({ status: "Logged Out successfully" });
+});
+
+// POST request
 // Update Contact Number
 router.post("/updateNumber", (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ msg: "No User Logged in" });
+    }
     const username = req.body.username;
     const contact_number = req.body.contact_number;
     console.log(username, contact_number);
+    if (req.session.user.username != username) {
+        return res.status(401).json({ msg: "Unauthorized access" });
+    }
     User.findOneAndUpdate({ username }, { contact_number }, (err, result) => {
         err ? res.status(500).json({ err }) : res.status(200).json({ result });
     });

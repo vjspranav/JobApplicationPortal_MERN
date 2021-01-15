@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var session = require("express-session");
 
 // For Mongo
 const bodyParser = require("body-parser");
@@ -30,7 +31,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(
+    session({ secret: "MySecrteKey", resave: false, saveUninitialized: true })
+);
 // Connect to moongose
 // Connection to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/" + DB_NAME, {
