@@ -46,6 +46,12 @@ router.post("/register", (req, res) => {
 // POST request
 // Login
 router.post("/login", (req, res) => {
+    if (req.session.user)
+        return res
+            .status(401)
+            .json({
+                status: "Please logout before trying to login into a different user",
+            });
     const email = req.body.email;
     const username = req.body.username;
     const pass = req.body.password;

@@ -7,6 +7,17 @@ const Job = require("../models/jobs");
 // POST request
 // Add a job to db
 router.post("/createJob", (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ msg: "No User Logged in" });
+    }
+    var curUser = req.session.user;
+    if (req.session.user.type != "recruiter") {
+        return res.status(401).json({
+            username: curUser.username,
+            type: curUser.type,
+            status: "Not a recruiter cannot post job",
+        });
+    }
     var today = new Date();
     const newJob = new Job({
         title: req.body.title,
@@ -18,6 +29,11 @@ router.post("/createJob", (req, res) => {
         type: req.body.type,
         duration: req.body.duration,
         salary: req.body.salary,
+        author: {
+            username: curUser.username,
+            name: curUser.name,
+            email: curUser.email,
+        },
     });
     newJob
         .save()

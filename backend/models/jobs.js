@@ -10,7 +10,7 @@ const JobSchema = new Schema({
     },
     author: {
         type: Object,
-        required: false, //Will make it true
+        required: true, //Will make it true
     },
     numApplications: {
         type: Number,
