@@ -1,22 +1,21 @@
-import { useState, Button } from "react";
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+//import "./components/templates/node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+import Navbar from "./components/templates/Navbar";
+import { Register } from "./accounts/Register";
+import Test from "./Test";
 
 function App() {
-  let [val, setVal] = useState(0);
-  let [flag, setFlag] = useState(1);
   return (
-    <div>
-      <h1>Value is {val}</h1>
-      <>
-        <button
-          onClick={() => {
-            setFlag(flag === 1 ? (val > 8 ? 0 : 1) : val < 2 ? 1 : 0);
-            setVal(flag === 1 ? val + 1 : val - 1);
-          }}
-        >
-          {flag === 1 ? "Increase" : "Decrease"}
-        </button>
-      </>
-    </div>
+    <Router>
+      <div className="container">
+        <Navbar />
+        <br />
+        <Route path="/register" component={Register} />
+        <Route path="/test" component={Test} />
+      </div>
+    </Router>
   );
 }
 
