@@ -51,32 +51,33 @@ router.post("/login", (req, res) => {
     return res.status(401).json({
       status: "Please logout before trying to login into a different user",
     });
-  const email = req.body.email;
-  const username = req.body.username;
+  const userid = req.body.userid;
   const pass = req.body.password;
 
   // Find user by email or username
   // [{email}, {username}] same as [{'email':email}, {'username':username}]
-  User.findOne({ $or: [{ email }, { username }] }).then((user) => {
-    // Check if user email exists
-    if (!user) {
-      return res.status(401).json({
-        error: "Email not found",
-      });
-    } else {
-      if (pass === user.password) {
-        req.session.user = user;
-        res.status(200).json({
-          details: "Login Successfull",
-        });
-        return user;
-      } else {
+  User.findOne({ $or: [{ email: userid }, { username: userid }] }).then(
+    (user) => {
+      // Check if user email exists
+      if (!user) {
         return res.status(401).json({
-          error: "Password wrong",
+          error: "Email not found",
         });
+      } else {
+        if (pass === user.password) {
+          req.session.user = user;
+          res.status(200).json({
+            details: "Login Successfull",
+          });
+          return user;
+        } else {
+          return res.status(401).json({
+            error: "Password wrong",
+          });
+        }
       }
     }
-  });
+  );
 });
 
 // POST request
