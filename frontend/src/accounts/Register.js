@@ -2,10 +2,12 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 function Register({ history }) {
   const initialValues = {
     fullName: "",
+    username: "",
     gender: "M",
     email: "",
     password: "",
@@ -15,6 +17,7 @@ function Register({ history }) {
   const validationSchema = Yup.object().shape({
     gender: Yup.string().required("Title is required"),
     fullName: Yup.string().required("Name is required"),
+    username: Yup.string().required("Name is required"),
     email: Yup.string()
       .email("Please enter a valid email")
       .required("Email is required"),
@@ -30,8 +33,25 @@ function Register({ history }) {
   });
 
   function onSubmit(fields, { setStatus, setSubmitting }) {
-    console.log("hello WOrld");
-    history.push("/test");
+    const userDetails = {
+      name: fields.fullName,
+      username: fields.username,
+      email: fields.email,
+      type: "applicant",
+      gender: fields.gender,
+      password: fields.password,
+    };
+    axios.post("http://localhost:4000/users/register", userDetails).then(
+      (response) => {
+        console.log(response);
+        history.push("/login");
+      },
+      (error) => {
+        console.log(error);
+        alert("User Creation Failed");
+      }
+    );
+    console.log(userDetails);
   }
 
   return (
@@ -66,7 +86,7 @@ function Register({ history }) {
                   className="invalid-feedback"
                 />
               </div>
-              <div className="form-group col-5">
+              <div className="form-group col-10">
                 <label>Full Name</label>
                 <Field
                   name="fullName"
@@ -82,6 +102,22 @@ function Register({ history }) {
                   className="invalid-feedback"
                 />
               </div>
+            </div>
+            <div className="form-group">
+              <label>Username</label>
+              <Field
+                name="username"
+                type="text"
+                className={
+                  "form-control" +
+                  (errors.username && touched.username ? " is-invalid" : "")
+                }
+              />
+              <ErrorMessage
+                name="username"
+                component="div"
+                className="invalid-feedback"
+              />
             </div>
             <div className="form-group">
               <label>Email</label>
