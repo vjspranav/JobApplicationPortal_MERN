@@ -21,12 +21,12 @@ function Login({ history, location }) {
       (response) => {
         localStorage.setItem("auth-token", response.data.token);
         console.log(response);
-        history.push("/test");
+        history.push("/");
       },
       (error) => {
         console.log(error);
         alert("Login Failed");
-        history.push("/test");
+        history.push("/");
       }
     );
   };

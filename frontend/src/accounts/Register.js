@@ -10,14 +10,16 @@ function Register({ history }) {
     username: "",
     gender: "M",
     email: "",
+    type: "",
     password: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object().shape({
-    gender: Yup.string().required("Title is required"),
+    gender: Yup.string().required("Gender is required"),
     fullName: Yup.string().required("Name is required"),
-    username: Yup.string().required("Name is required"),
+    username: Yup.string().required("Userame is required"),
+    type: Yup.string().required("Type of User is required"),
     email: Yup.string()
       .email("Please enter a valid email")
       .required("Email is required"),
@@ -37,7 +39,7 @@ function Register({ history }) {
       name: fields.fullName,
       username: fields.username,
       email: fields.email,
-      type: "applicant",
+      type: fields.type,
       gender: fields.gender,
       password: fields.password,
     };
@@ -75,13 +77,14 @@ function Register({ history }) {
                     (errors.gender && touched.gender ? " is-invalid" : "")
                   }
                 >
+                  <option value=""></option>
                   <option value="M">Male</option>
                   <option value="F">Female</option>
                   <option value="O">Other</option>
                   <option value="None">Prefer Not to state</option>
                 </Field>
                 <ErrorMessage
-                  name="title"
+                  name="gender"
                   component="div"
                   className="invalid-feedback"
                 />
@@ -119,21 +122,43 @@ function Register({ history }) {
                 className="invalid-feedback"
               />
             </div>
-            <div className="form-group">
-              <label>Email</label>
-              <Field
-                name="email"
-                type="text"
-                className={
-                  "form-control" +
-                  (errors.email && touched.email ? " is-invalid" : "")
-                }
-              />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="invalid-feedback"
-              />
+            <div className="form-row">
+              <div className="form-group col">
+                <label>Email</label>
+                <Field
+                  name="email"
+                  type="text"
+                  className={
+                    "form-control" +
+                    (errors.email && touched.email ? " is-invalid" : "")
+                  }
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
+              <div className="form-group col-2">
+                <label>Type</label>
+                <Field
+                  name="type"
+                  as="select"
+                  className={
+                    "form-control" +
+                    (errors.type && touched.type ? " is-invalid" : "")
+                  }
+                >
+                  <option value=""></option>
+                  <option value="applicant">Applicant</option>
+                  <option value="recruiter">Recruiter</option>
+                </Field>
+                <ErrorMessage
+                  name="type"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
             </div>
             <div className="form-row">
               <div className="form-group col">
@@ -182,7 +207,7 @@ function Register({ history }) {
                 )}
                 Register
               </button>
-              <Link to="/test" className="btn btn-link">
+              <Link to="/" className="btn btn-link">
                 Cancel
               </Link>
             </div>

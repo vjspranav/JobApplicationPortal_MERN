@@ -16,7 +16,7 @@ function App() {
         <br />
         <Route path="/register" component={Register} />
         <Route path="/login" component={Login} />
-        <Route path="/test" component={Test} />
+        <Route path="/" component={Test} />
       </div>
     </Router>
   );
