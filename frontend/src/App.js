@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 //import "./components/templates/node_modules/bootstrap/dist/css/bootstrap.min.css";
 
@@ -6,6 +6,7 @@ import Navbar from "./components/templates/Navbar";
 import { Login } from "./accounts/Login";
 import { Register } from "./accounts/Register";
 import Test from "./Test";
+import axios from "axios";
 
 function App() {
   return (

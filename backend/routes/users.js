@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 
 // Load User model
+const auth = require("../auth/Auth");
+const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const Applicant = require("../models/applicants");
 const Recruiter = require("../models/recruiters");
@@ -47,10 +49,6 @@ router.post("/register", (req, res) => {
 // POST request
 // Login
 router.post("/login", (req, res) => {
-  if (req.session.user)
-    return res.status(401).json({
-      status: "Please logout before trying to login into a different user",
-    });
   const userid = req.body.userid;
   const pass = req.body.password;
 
@@ -65,8 +63,10 @@ router.post("/login", (req, res) => {
         });
       } else {
         if (pass === user.password) {
-          req.session.user = user;
+          const token = jwt.sign({ user }, "JWT_TOKEN_SECRET");
+          console.log(token);
           res.status(200).json({
+            token,
             details: "Login Successfull",
           });
           return user;
@@ -81,22 +81,35 @@ router.post("/login", (req, res) => {
 });
 
 // POST request
+// Token Validation
+// router.post("/tokenIsValid", async (req, res) => {
+//   try {
+//     const token = req.header("x-auth-token");
+//     if (!token) return res.json(false);
+//     const verified = jwt.verify(token, process.env.JWT_SECRET);
+//     if (!verified) return res.json(false);
+//     const user = await User.findById(verified.id);
+//     if (!user) return res.json(false);
+//     return res.json(true);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+// POST request
 // Login
-router.post("/logout", (req, res) => {
-  if (!req.session.user)
-    return res.status(500).json({ status: "No User Logged in" });
-  req.session.destroy((err) => {
-    res.status(500).json(err);
-  });
-  res.status(200).json({ status: "Logged Out successfully" });
-});
+// router.post("/logout", (req, res) => {
+//   if (!req.session.user)
+//     return res.status(500).json({ status: "No User Logged in" });
+//   req.session.destroy((err) => {
+//     res.status(500).json(err);
+//   });
+//   res.status(200).json({ status: "Logged Out successfully" });
+// });
 
 // POST request
 // Update Contact Number
-router.post("/updateNumber", (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ msg: "No User Logged in" });
-  }
+router.post("/updateNumber", auth, (req, res) => {
   const username = req.body.username;
   const contact_number = req.body.contact_number;
   console.log(username, contact_number);

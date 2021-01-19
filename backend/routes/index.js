@@ -1,3 +1,4 @@
+const auth = require("../auth/Auth");
 var express = require("express");
 var router = express.Router();
 
@@ -7,9 +8,7 @@ router.get("/", function (req, res) {
 });
 
 /* Protected GET home page. */
-router.get("/protected", function (req, res) {
-  if (!req.session.user)
-    return res.status(200).json({ status: "Not logged in" });
+router.get("/protected", auth, function (req, res) {
   res.send({ status: "API atfer login is working properly !" });
 });
 
