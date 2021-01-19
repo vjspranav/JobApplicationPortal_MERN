@@ -113,7 +113,7 @@ router.post("/updateNumber", auth, (req, res) => {
   const username = req.body.username;
   const contact_number = req.body.contact_number;
   console.log(username, contact_number);
-  if (req.session.user.username != username) {
+  if (req.user.username != username) {
     return res.status(401).json({ msg: "Unauthorized access" });
   }
   User.findOneAndUpdate({ username }, { contact_number }, (err, result) => {

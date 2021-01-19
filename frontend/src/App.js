@@ -6,7 +6,6 @@ import Navbar from "./components/templates/Navbar";
 import { Login } from "./accounts/Login";
 import { Register } from "./accounts/Register";
 import Test from "./Test";
-import axios from "axios";
 
 function App() {
   return (
