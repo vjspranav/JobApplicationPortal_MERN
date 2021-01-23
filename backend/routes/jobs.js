@@ -33,6 +33,7 @@ router.post("/createJob", auth, (req, res) => {
       email: curUser.email,
     },
   });
+
   newJob
     .save()
     .then((job) => {
