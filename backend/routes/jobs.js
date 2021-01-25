@@ -4,8 +4,8 @@ const auth = require("../auth/Auth");
 
 // Load Job model
 const Job = require("../models/jobs");
-const Applications = require("../models/applications");
-
+const Application = require("../models/applications");
+const Applicant = require("../models/applicants");
 // POST request
 // Add a job to db
 router.post("/createJob", auth, (req, res) => {
@@ -117,6 +117,59 @@ router.get("/getMyJobs", auth, async (req, res) => {
 
     res.send(jobMap);
   });
+});
+
+// POST request
+// Applyfor a job
+router.post("/createApplication", auth, async (req, res) => {
+  var curUser = req.user;
+  if (req.user.type != "applicant") {
+    return res.status(401).json({
+      username: curUser.username,
+      type: curUser.type,
+      status: "Not an applicant cannot apply",
+    });
+  }
+
+  let num_jobs = await Applicant.findOne({ username: curUser.username });
+  num_jobs = num_jobs.num_jobs;
+  if (num_jobs > 10) {
+    return res.status(401).send({ msg: "Cannot apply to more than 10 jobs" });
+  }
+  let date = new Date();
+  let job_id = req.body.job_id;
+  let applicant = curUser.username;
+  let recruiter = req.body.recruiter;
+  let jobTitle = req.body.jobTitle;
+  let sop = req.body.sop;
+
+  const newApplication = new Application({
+    recruiter,
+    applicant,
+    job_id,
+    jobTitle,
+    sop,
+    date,
+    status: "Applied",
+  });
+
+  newApplication
+    .save()
+    .then((application) => {
+      num_jobs = num_jobs ? num_jobs + 1 : 1;
+      Applicant.findOneAndUpdate(
+        { username: applicant },
+        { num_jobs },
+        (err, result) => {
+          err
+            ? res.status(500).json({ err })
+            : res.status(200).json({ application, result });
+        }
+      );
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
 });
 
 module.exports = router;

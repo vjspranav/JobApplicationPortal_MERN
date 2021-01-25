@@ -19,6 +19,10 @@ const ApplicantSchema = new Schema({
     type: Number,
     required: false,
   },
+  num_jobs: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = Applicant = mongoose.model("Applicants", ApplicantSchema);

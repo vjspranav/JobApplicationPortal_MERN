@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function Test({ history }) {
   let [val, setVal] = useState("You are not logged in");
-  let token = localStorage.getItem("auth-token");
+  let token = sessionStorage.getItem("auth-token");
   console.log(token);
   axios
     .get(
@@ -26,8 +26,9 @@ export default function Test({ history }) {
       <button
         onClick={() => {
           if (val === "API atfer login is working properly !") {
-            localStorage.setItem("auth-token", "");
+            sessionStorage.setItem("auth-token", "");
             setVal("You are not Logged in");
+            history.push("/");
           } else {
             history.push("/login");
           }

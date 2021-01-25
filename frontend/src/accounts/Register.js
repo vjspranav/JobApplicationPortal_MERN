@@ -55,7 +55,11 @@ function Register({ history }) {
     );
     console.log(userDetails);
   }
-
+  let token = sessionStorage.getItem("auth-token");
+  if (token) {
+    alert("Already logged in");
+    history.push("/dashboard");
+  }
   return (
     <Formik
       initialValues={initialValues}

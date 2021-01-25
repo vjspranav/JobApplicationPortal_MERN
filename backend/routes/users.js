@@ -31,6 +31,7 @@ router.post("/register", async (req, res) => {
     newUser.type == "applicant"
       ? new Applicant({
           username: newUser.username,
+          num_jobs: 0,
         })
       : new Recruiter({
           username: newUser.username,
@@ -84,6 +85,13 @@ router.post("/login", async (req, res) => {
       });
     }
   }
+});
+
+// GET request
+// Get Current User Details
+router.get("/getMyUser", auth, async (req, res) => {
+  let curUser = req.user;
+  return res.status(200).json({ user: curUser });
 });
 
 // POST request

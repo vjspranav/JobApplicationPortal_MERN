@@ -12,7 +12,7 @@ const ApplicationSchema = new Schema({
     required: true,
   },
   job_id: {
-    type: Number,
+    type: String,
     required: true,
   },
   jobTitle: {
@@ -25,6 +25,10 @@ const ApplicationSchema = new Schema({
   },
   date: {
     type: Date,
+    required: true,
+  },
+  status: {
+    type: String,
     required: true,
   },
 });

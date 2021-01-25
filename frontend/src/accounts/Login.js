@@ -19,18 +19,22 @@ function Login({ history, location }) {
     const userDetails = { userid, password };
     axios.post("http://localhost:4000/users/login", userDetails).then(
       (response) => {
-        localStorage.setItem("auth-token", response.data.token);
+        sessionStorage.setItem("auth-token", response.data.token);
         console.log(response);
-        history.push("/");
+        history.push("/dashboard");
       },
       (error) => {
         console.log(error);
         alert("Login Failed");
-        history.push("/");
+        history.push("/login");
       }
     );
   };
-
+  let token = sessionStorage.getItem("auth-token");
+  if (token) {
+    alert("Already logged in");
+    history.push("/dashboard");
+  }
   return (
     <Formik
       initialValues={initialValues}
