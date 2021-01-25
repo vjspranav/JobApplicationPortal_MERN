@@ -45,9 +45,9 @@ router.post("/createJob", auth, (req, res) => {
     });
 });
 
-// GET request
+// POST request
 // Get all jobs from db
-router.get("/getJobs", async (req, res) => {
+router.post("/getJobs", async (req, res) => {
   let jType = ["fulltime", "parttime", "wfh"];
   let maxMonths = await Job.find({})
     .sort({ duration: -1 })
@@ -87,7 +87,7 @@ router.get("/getJobs", async (req, res) => {
         jobMap[job._id] = job;
       });
 
-      res.send(jobMap);
+      res.send({ jobs: jobMap });
     }
   );
 });

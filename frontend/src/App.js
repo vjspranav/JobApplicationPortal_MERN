@@ -7,6 +7,9 @@ import { Login } from "./accounts/Login";
 import { Register } from "./accounts/Register";
 import Test from "./Test";
 import { Dashboard } from "./dashboard/dashboard";
+import { RecruiterProfile } from "./dashboard/applicantProfile";
+import { ApplicantProfile } from "./dashboard/recruiterProfile";
+import { Jobs } from "./dashboard/jobs";
 function App() {
   let [token, setToken] = useState(sessionStorage.getItem("auth-token"));
   useEffect(() => {
@@ -21,6 +24,9 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/test" component={Test} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/applicantProfile" component={ApplicantProfile} />
+        <Route path="/recruiterProfile" component={RecruiterProfile} />
+        <Route path="/jobs" component={Jobs} />
       </div>
     </Router>
   );
