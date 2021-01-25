@@ -4,6 +4,7 @@ const auth = require("../auth/Auth");
 
 // Load Job model
 const Job = require("../models/jobs");
+const Applications = require("../models/applications");
 
 // POST request
 // Add a job to db
@@ -75,8 +76,8 @@ router.get("/getJobs", async (req, res) => {
       $and: [
         { salary: { $lte: maxSal } },
         { salary: { $gte: minSal } },
-        { $or: [{ type: jType }] },
-        { $or: [{ duration: { $lt: maxMonths } }] },
+        { type: jType },
+        { duration: { $lt: maxMonths } },
       ],
     },
     (err, jobs) => {
@@ -89,6 +90,33 @@ router.get("/getJobs", async (req, res) => {
       res.send(jobMap);
     }
   );
+});
+
+// GET request
+// Get all jobs of the recruiter from db
+router.get("/getMyJobs", auth, async (req, res) => {
+  let curUser = req.user;
+  if (req.user.type != "recruiter") {
+    return res.status(401).json({
+      username: curUser.username,
+      type: curUser.type,
+      status: "Not a recruiter cannot post job",
+    });
+  }
+  let author = {
+    username: curUser.username,
+    name: curUser.name,
+    email: curUser.email,
+  };
+  Job.find({ author }, (err, jobs) => {
+    var jobMap = {};
+
+    jobs.forEach((job) => {
+      jobMap[job._id] = job;
+    });
+
+    res.send(jobMap);
+  });
 });
 
 module.exports = router;
