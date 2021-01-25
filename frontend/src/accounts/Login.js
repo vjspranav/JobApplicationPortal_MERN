@@ -21,12 +21,12 @@ function Login({ history, location }) {
       (response) => {
         sessionStorage.setItem("auth-token", response.data.token);
         console.log(response);
-        history.push("/dashboard");
+        window.location = "/dashboard";
       },
       (error) => {
         console.log(error);
         alert("Login Failed");
-        history.push("/login");
+        window.location = window.location.href;
       }
     );
   };

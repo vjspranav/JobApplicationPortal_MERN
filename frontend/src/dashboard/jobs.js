@@ -42,6 +42,8 @@ function Jobs({ location, history }) {
   let token = sessionStorage.getItem("auth-token");
   let [jobs, setJobs] = useState({});
   let [sal, setSal] = useState([]);
+  let [user, setUser] = useState(" ");
+  let [dutration, setDuration] = useState(7);
 
   useEffect(() => {
     const filters = {};
@@ -55,31 +57,34 @@ function Jobs({ location, history }) {
       .then((response) => {
         setJobs(response.data.jobs);
         console.log(jobs);
-        setLoading(false);
+        axios
+          .get(
+            "http://localhost:4000/users/getMyUser",
+            {
+              headers: { "x-auth-token": token },
+            },
+            null
+          )
+          .then((response) => {
+            console.log(response.status);
+            setUser(response.data.user);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
       });
   }, [sal]);
 
-  //   const RenderJob = () => {
-  //     if (jobs)
-  //       return Object.entries(jobs).map(([key, job], i) => {
-  //         console.log("job is", job);
-  //         return (
-  //           <div key={key}>
-  //             name is: {job.title}
-  //             recruiter is: {job.author.name}
-  //             rating: {job.rating ? job.rating : "unrated"}
-  //             duration: {job.duration} Months salary: {job.salary}
-  //             type: {job.type}
-  //           </div>
-  //         );
-  //       });
-  //     else {
-  //       <h1>No Jobs Found</h1>;
-  //     }
-  //   };
-
+  if (!token) {
+    history.push("/login");
+  }
   if (isLoading) return <h1>Loading Jobs</h1>;
-
+  if (user.type != "applicant") {
+    alert("Recruiter not allowed");
+    history.push("/dashboard");
+  }
   return (
     <div>
       <Grid container>

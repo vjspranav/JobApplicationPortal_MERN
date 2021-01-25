@@ -28,9 +28,9 @@ export default function Test({ history }) {
           if (val === "API atfer login is working properly !") {
             sessionStorage.setItem("auth-token", "");
             setVal("You are not Logged in");
-            history.push("/");
+            window.location = "/test";
           } else {
-            history.push("/login");
+            window.location = "/login";
           }
         }}
       >
