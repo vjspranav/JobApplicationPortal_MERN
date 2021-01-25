@@ -46,16 +46,49 @@ router.post("/createJob", auth, (req, res) => {
 
 // GET request
 // Get all jobs from db
-router.get("/getJobs", (req, res) => {
-  Job.find({}, (err, jobs) => {
-    var jobMap = {};
+router.get("/getJobs", async (req, res) => {
+  let jType = ["fulltime", "parttime", "wfh"];
+  let maxMonths = await Job.find({})
+    .sort({ duration: -1 })
+    .limit(1)
+    .then((jobs) => jobs[0].duration);
+  let minSal = await Job.find({})
+    .sort({ salary: 1 })
+    .limit(1)
+    .then((jobs) => jobs[0].salary);
+  let maxSal = await Job.find({})
+    .sort({ salary: -1 })
+    .limit(1)
+    .then((jobs) => jobs[0].salary);
+  minSal = req.body.minSal ? req.body.minSal : minSal;
+  maxSal = req.body.maxSal ? req.body.maxSal : maxSal;
+  maxMonths = req.body.maxMonths ? req.body.maxMonths : maxMonths + 1;
 
-    jobs.forEach((job) => {
-      jobMap[job._id] = job;
-    });
+  if (req.body.wfh == 0) jType = jType.filter((item) => item != "wfh");
+  if (req.body.ptime == 0) jType = jType.filter((item) => item != "parttime");
+  if (req.body.ftime == 0) jType = jType.filter((item) => item != "fulltime");
 
-    res.send(jobMap);
-  });
+  console.log(jType);
+  console.log(minSal, maxSal);
+  Job.find(
+    {
+      $and: [
+        { salary: { $lte: maxSal } },
+        { salary: { $gte: minSal } },
+        { $or: [{ type: jType }] },
+        { $or: [{ duration: { $lt: maxMonths } }] },
+      ],
+    },
+    (err, jobs) => {
+      var jobMap = {};
+
+      jobs.forEach((job) => {
+        jobMap[job._id] = job;
+      });
+
+      res.send(jobMap);
+    }
+  );
 });
 
 module.exports = router;
