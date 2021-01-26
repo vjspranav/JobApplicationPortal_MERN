@@ -2,7 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { withStyles, useStyles } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  withStyles,
+  useStyles,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import {
   Table,
   TableBody,
@@ -12,6 +17,7 @@ import {
   TableRow,
   Paper,
 } from "@material-ui/core";
+import { green, purple } from "@material-ui/core/colors";
 
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -35,6 +41,13 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const theme = createMuiTheme({
+  palette: {
+    green: green,
+    secondary: green,
+  },
+});
+
 // For Salary Filter
 
 function Jobs({ location, history }) {
@@ -43,6 +56,8 @@ function Jobs({ location, history }) {
   let [jobs, setJobs] = useState({});
   let [sal, setSal] = useState([]);
   let [user, setUser] = useState(" ");
+  let [applicant, setApplicant] = useState(" ");
+  let [applications, setApplications] = useState(" ");
   let [dutration, setDuration] = useState(7);
 
   useEffect(() => {
@@ -68,7 +83,39 @@ function Jobs({ location, history }) {
           .then((response) => {
             console.log(response.status);
             setUser(response.data.user);
-            setLoading(false);
+            axios
+              .get(
+                "http://localhost:4000/users/getMyUserApplicant",
+                {
+                  headers: { "x-auth-token": token },
+                },
+                null
+              )
+              .then((response) => {
+                console.log(response.status);
+                setApplicant(response.data.applicant);
+                axios
+                  .get(
+                    "http://localhost:4000/jobs/getMyApplications",
+                    {
+                      headers: { "x-auth-token": token },
+                    },
+                    null
+                  )
+                  .then((response) => {
+                    console.log(response.status);
+                    setApplications(response.data.applications);
+                    setLoading(false);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    setLoading(false);
+                  });
+              })
+              .catch((error) => {
+                console.log(error);
+                setLoading(false);
+              });
           })
           .catch((error) => {
             console.log(error);
@@ -85,6 +132,25 @@ function Jobs({ location, history }) {
     alert("Recruiter not allowed");
     history.push("/dashboard");
   }
+  console.log(applicant);
+  console.log(applications);
+
+  const checkJob = (applications, job_id) => {
+    console.log("In Loop");
+    Object.values(applications).forEach((application) => {
+      console.log(application.job_id, job_id);
+      if (application.job_id === job_id) {
+        console.log("True Returned");
+        return true;
+      }
+    });
+    return false;
+  };
+  let job_ids = [];
+  Object.values(applications).forEach((application) => {
+    job_ids.push(application.job_id);
+  });
+  console.log(job_ids);
   return (
     <div>
       <Grid container>
@@ -181,15 +247,21 @@ function Jobs({ location, history }) {
                         {job.rating ? job.rating : "unrated"}
                       </TableCell>
                       <TableCell align="center">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            console.log("Minsal, MaxSal: ");
-                          }}
-                        >
-                          Apply
-                        </Button>
+                        <ThemeProvider theme={theme}>
+                          <Button
+                            variant="contained"
+                            color={
+                              job_ids.includes(job._id)
+                                ? "secondary"
+                                : "primary"
+                            }
+                            onClick={() => {
+                              console.log("Minsal, MaxSal: ");
+                            }}
+                          >
+                            {job_ids.includes(job._id) ? "Applied" : "Apply"}
+                          </Button>
+                        </ThemeProvider>
                       </TableCell>
                     </StyledTableRow>
                   ))}

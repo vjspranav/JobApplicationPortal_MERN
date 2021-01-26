@@ -132,17 +132,16 @@ router.get("/getMyApplications", auth, async (req, res) => {
       status: "Not an applicant",
     });
   }
-  let applicant = {
-    username: curUser.username,
-  };
-  Application.find({ applicant }, (err, application) => {
+  let applicant = curUser.username;
+  Application.find({ applicant }, (err, applications) => {
     var applicationMap = {};
+    console.log(applications, applicant);
+    if (applications)
+      applications.forEach((application) => {
+        applicationMap[application._id] = application;
+      });
 
-    applications.forEach((job) => {
-      applicationMap[application._id] = application;
-    });
-
-    res.send(applicationMap);
+    res.status(200).json({ applications: applicationMap });
   });
 });
 

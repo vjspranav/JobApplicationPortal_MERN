@@ -96,10 +96,11 @@ router.get("/getMyUser", auth, async (req, res) => {
 
 // GET request
 // Get Current UserApplicant Details
-router.get("/getMyUser", auth, async (req, res) => {
+router.get("/getMyUserApplicant", auth, async (req, res) => {
   let curUser = req.user;
-  let curApplicant = Applicant.findOne({ username: req.user.username });
-  return res.status(200).json({ applicant: curApplicant });
+  let curApplicant = await Applicant.findOne({ username: curUser.username });
+  console.log(curApplicant);
+  return res.status(200).send({ applicant: curApplicant });
 });
 
 // POST request

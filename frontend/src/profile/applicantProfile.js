@@ -82,30 +82,33 @@ function ApplicantProfile({ location, history }) {
 
   const classes = useStyles();
 
+  let getUser = async () => {
+    await axios
+      .get(
+        "http://localhost:4000/users/getMyUser",
+        {
+          headers: { "x-auth-token": token },
+        },
+        null
+      )
+      .then((response) => {
+        console.log(response.status);
+        setUser(response.data.user);
+        console.log(user.email);
+        // setName(response.data.user.name);
+        // setEmail(response.data.user.email);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    let getUser = async () => {
-      await axios
-        .get(
-          "http://localhost:4000/users/getMyUser",
-          {
-            headers: { "x-auth-token": token },
-          },
-          null
-        )
-        .then((response) => {
-          console.log(response.status);
-          setUser(response.data.user);
-          setName(response.data.user.name);
-          setEmail(response.data.user.email);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setLoading(false);
-        });
-    };
     getUser();
-  }, [token, user.email]);
+  }, []);
+
   console.log(token);
 
   if (isLoading) {
@@ -165,7 +168,7 @@ function ApplicantProfile({ location, history }) {
             Email :{" "}
             <TextField
               id="standard-basic"
-              defaultValue={user.email}
+              defaultValue={user ? user.email : email}
               onChange={(e) => {
                 setEmail(e.target.value);
                 console.log(email);
@@ -177,6 +180,7 @@ function ApplicantProfile({ location, history }) {
                     color="primary"
                     onClick={() => {
                       updateEmail(email, token);
+                      getUser();
                     }}
                   >
                     Update
