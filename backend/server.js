@@ -10,7 +10,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const PORT = 4000;
-const DB_NAME = "tutorial";
+const DB_NAME = "vjs_jobportal";
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");

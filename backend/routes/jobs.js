@@ -233,10 +233,11 @@ router.post("/createApplication", auth, async (req, res) => {
 router.post("/updateApplicationStatus", auth, async (req, res) => {
   var curUser = req.user;
   if (req.user.type != "recruiter") {
+    console.log("Error");
     return res.status(401).json({
       username: curUser.username,
       type: curUser.type,
-      status: "Recruiter cannot change status",
+      status: "Applicant cannot change status",
     });
   }
   let application_id = req.body.application_id;
@@ -246,8 +247,9 @@ router.post("/updateApplicationStatus", auth, async (req, res) => {
   let applications = await Application.find({
     $and: [{ _id: { $ne: application_id } }, { applicant: curApplicant }],
   });
-  //console.log(applications);
+  console.log("Here");
   if (job.author.username != curUser.username) {
+    console.log("Error HEre");
     return res.status(401).json({
       username: curUser.username,
       type: curUser.type,

@@ -14,6 +14,7 @@ import { MyJobApplications } from "./dashboard/myJobApplications";
 import { Profile } from "./profile/profile";
 import { ApplicantProfile } from "./profile/applicantProfile";
 import { RecruiterProfile } from "./profile/recruiterProfile";
+import { CreateJob } from "./dashboard/createJob";
 
 function App() {
   let [token, setToken] = useState(sessionStorage.getItem("auth-token"));
@@ -36,6 +37,7 @@ function App() {
         <Route path="/myjobs" component={MyJobs} />
         <Route path="/myjobapplications" component={MyJobApplications} />
         <Route path="/applications" component={MyApplications} />
+        <Route path="/createjob" component={CreateJob} />
       </div>
     </Router>
   );
