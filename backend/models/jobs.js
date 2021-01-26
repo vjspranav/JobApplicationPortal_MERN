@@ -19,6 +19,14 @@ const JobSchema = new Schema({
     type: Number,
     required: true,
   },
+  curNumApplications: {
+    type: Number,
+    required: true,
+  },
+  curNumPositions: {
+    type: Number,
+    required: true,
+  },
   date: {
     type: Date,
     required: true,
