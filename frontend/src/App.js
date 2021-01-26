@@ -7,6 +7,7 @@ import { Login } from "./accounts/Login";
 import { Register } from "./accounts/Register";
 import Test from "./Test";
 import { Dashboard } from "./dashboard/dashboard";
+import { MyApplications } from "./dashboard/myApplications";
 import { Jobs } from "./dashboard/jobs";
 import { Profile } from "./profile/profile";
 import { ApplicantProfile } from "./profile/applicantProfile";
@@ -30,6 +31,7 @@ function App() {
         <Route path="/applicantProfile" component={ApplicantProfile} />
         <Route path="/recruiterProfile" component={RecruiterProfile} />
         <Route path="/jobs" component={Jobs} />
+        <Route path="/applications" component={MyApplications} />
       </div>
     </Router>
   );

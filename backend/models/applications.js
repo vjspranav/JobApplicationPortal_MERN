@@ -31,6 +31,10 @@ const ApplicationSchema = new Schema({
     type: String,
     required: true,
   },
+  rating: {
+    type: Number,
+    required: false,
+  },
 });
 
 module.exports = Application = mongoose.model(
