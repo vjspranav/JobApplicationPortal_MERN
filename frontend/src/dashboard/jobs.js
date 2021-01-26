@@ -151,6 +151,38 @@ function Jobs({ location, history }) {
     job_ids.push(application.job_id);
   });
   console.log(job_ids);
+  if (applicant.status == "employeed")
+    return (
+      <div>
+        {" "}
+        <h1>Already Employeed</h1>{" "}
+        <Button
+          color="primary"
+          onClick={() => {
+            window.location = "/profile";
+          }}
+        >
+          My Profile{" "}
+        </Button>
+        <Button
+          color="primary"
+          onClick={() => {
+            window.location = "/applications";
+          }}
+        >
+          My Applications
+        </Button>
+        <Button
+          color="secondary"
+          onClick={() => {
+            sessionStorage.setItem("auth-token", "");
+            window.location = "/login";
+          }}
+        >
+          Logout
+        </Button>
+      </div>
+    );
   return (
     <div>
       <Grid container>
@@ -304,7 +336,18 @@ function Jobs({ location, history }) {
                               }
                             }}
                           >
-                            {job_ids.includes(job._id) ? "Applied" : "Apply"}
+                            {job_ids.includes(job._id)
+                              ? "Applied"
+                              : jobs[job._id].curNumPositions <
+                                jobs[job._id].numPositions
+                              ? "Apply"
+                              : "Full"}
+                            {console.log(
+                              jobs[job._id].curNumPositions,
+                              jobs[job._id].NumPositions,
+                              jobs[job._id].curNumPositions <
+                                jobs[job._id].numPositions
+                            )}
                           </Button>
                         </ThemeProvider>
                       </TableCell>

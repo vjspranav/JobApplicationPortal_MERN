@@ -255,7 +255,24 @@ router.post("/updateApplicationStatus", auth, async (req, res) => {
         Application.findOneAndUpdate(
           { _id: application_id },
           { acceptDate }
-        ).then((result) => console.log(result));
+        ).then((result) => {
+          Applicant.findOneAndUpdate({
+            username: application.applicant,
+            status: "employeed",
+          }).then((result) => {
+            job.curnumApplications -= 1;
+            job.curNumPositions += 1;
+            Job.findOneAndUpdate(
+              { _id: job._id },
+              {
+                curNumPositions: job.curNumPositions,
+                curNumApplications: job.curNumApplications,
+              }
+            ).then((result) => {
+              console.log(result);
+            });
+          });
+        });
         //console.log(applications);
         console.log("Let's see results");
         applications.forEach((application) => {

@@ -11,6 +11,10 @@ const ApplicantSchema = new Schema({
     type: Object,
     required: false,
   },
+  status: {
+    type: String,
+    required: false,
+  },
   skills: {
     type: Array,
     required: false,

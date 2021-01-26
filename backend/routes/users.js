@@ -32,6 +32,7 @@ router.post("/register", async (req, res) => {
       ? new Applicant({
           username: newUser.username,
           num_jobs: 0,
+          status: "unemployeed",
         })
       : new Recruiter({
           username: newUser.username,
