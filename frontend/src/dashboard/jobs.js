@@ -256,7 +256,52 @@ function Jobs({ location, history }) {
                                 : "primary"
                             }
                             onClick={() => {
-                              console.log("Minsal, MaxSal: ");
+                              if (job_ids.includes(job._id))
+                                console.log("Already Applied");
+                              else {
+                                var maxLength = 250;
+                                let sop = -1;
+
+                                while (
+                                  sop == -1 ||
+                                  (sop != null &&
+                                    sop.split(" ").length > maxLength)
+                                ) {
+                                  alert("Please enter in less than 250 words");
+                                  sop = prompt(
+                                    "Please enter SOP (in not more than 250 words)",
+                                    "Tell us about yourself"
+                                  );
+                                }
+                                let data = {
+                                  job_id: job._id,
+                                  recruiter: job.author.username,
+                                  jobTitle: job.title,
+                                  sop,
+                                };
+                                axios
+                                  .post(
+                                    "http://localhost:4000/jobs/createApplication",
+                                    data,
+                                    {
+                                      headers: { "x-auth-token": token },
+                                    }
+                                  )
+                                  .then(
+                                    (response) => {
+                                      console.log(response.status);
+                                      if (response.status == 200) {
+                                        alert("Applied Successfully");
+                                        window.location = window.location.href;
+                                      } else alert("err");
+                                    },
+                                    (error) => {
+                                      console.log(error);
+                                      alert("Applying Failed");
+                                      window.location = window.location.href;
+                                    }
+                                  );
+                              }
                             }}
                           >
                             {job_ids.includes(job._id) ? "Applied" : "Apply"}
