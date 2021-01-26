@@ -22,6 +22,8 @@ router.post("/createJob", auth, (req, res) => {
     title: req.body.title,
     numApplications: req.body.numApplications,
     numPositions: req.body.numPositions,
+    curNumApplications: 0,
+    curNumPositions: 0,
     date: today,
     deadline: req.body.deadline,
     skillset: req.body.skillset,
@@ -119,6 +121,31 @@ router.get("/getMyJobs", auth, async (req, res) => {
   });
 });
 
+// GET request
+// Get all applications of the applicant
+router.get("/getMyApplications", auth, async (req, res) => {
+  let curUser = req.user;
+  if (req.user.type != "applicant") {
+    return res.status(401).json({
+      username: curUser.username,
+      type: curUser.type,
+      status: "Not an applicant",
+    });
+  }
+  let applicant = {
+    username: curUser.username,
+  };
+  Application.find({ applicant }, (err, application) => {
+    var applicationMap = {};
+
+    applications.forEach((job) => {
+      applicationMap[application._id] = application;
+    });
+
+    res.send(applicationMap);
+  });
+});
+
 // POST request
 // Applyfor a job
 router.post("/createApplication", auth, async (req, res) => {
@@ -133,6 +160,15 @@ router.post("/createApplication", auth, async (req, res) => {
 
   let num_jobs = await Applicant.findOne({ username: curUser.username });
   num_jobs = num_jobs.num_jobs;
+  let jobDetails = await Job.findOne({ _id: req.body.job_id });
+  if (jobDetails.curNumApplications >= jobDetails.numApplications) {
+    return res
+      .status(401)
+      .send({ msg: "Max number of job applications reached" });
+  }
+  if (jobDetails.curNumPositions >= jobDetails.numPositions) {
+    return res.status(401).send({ msg: "All Positions Occupied" });
+  }
   if (num_jobs > 10) {
     return res.status(401).send({ msg: "Cannot apply to more than 10 jobs" });
   }
@@ -142,6 +178,10 @@ router.post("/createApplication", auth, async (req, res) => {
   let recruiter = req.body.recruiter;
   let jobTitle = req.body.jobTitle;
   let sop = req.body.sop;
+
+  jobDetails.curNumApplications = jobDetails.curNumApplications
+    ? jobDetails.curNumApplications + 1
+    : 1;
 
   const newApplication = new Application({
     recruiter,
@@ -161,11 +201,19 @@ router.post("/createApplication", auth, async (req, res) => {
         { username: applicant },
         { num_jobs },
         (err, result) => {
-          err
-            ? res.status(500).json({ err })
-            : res.status(200).json({ application, result });
+          err ? res.status(500).json({ err }) : "";
         }
-      );
+      ).then(() => {
+        Job.findOneAndUpdate(
+          {
+            _id: job_id,
+          },
+          { curNumApplications: jobDetails.curNumApplications },
+          (err, result) => {
+            err ? res.status(500).json({ err }) : res.status(200).json(result);
+          }
+        );
+      });
     })
     .catch((err) => {
       res.status(400).send(err);

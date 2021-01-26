@@ -94,6 +94,14 @@ router.get("/getMyUser", auth, async (req, res) => {
   return res.status(200).json({ user: curUser });
 });
 
+// GET request
+// Get Current UserApplicant Details
+router.get("/getMyUser", auth, async (req, res) => {
+  let curUser = req.user;
+  let curApplicant = Applicant.findOne({ username: req.user.username });
+  return res.status(200).json({ applicant: curApplicant });
+});
+
 // POST request
 // Token Validation
 // router.post("/tokenIsValid", async (req, res) => {
