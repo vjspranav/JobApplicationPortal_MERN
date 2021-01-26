@@ -9,6 +9,8 @@ import Test from "./Test";
 import { Dashboard } from "./dashboard/dashboard";
 import { MyApplications } from "./dashboard/myApplications";
 import { Jobs } from "./dashboard/jobs";
+import { MyJobs } from "./dashboard/myJobs";
+import { MyJobApplications } from "./dashboard/myJobApplications";
 import { Profile } from "./profile/profile";
 import { ApplicantProfile } from "./profile/applicantProfile";
 import { RecruiterProfile } from "./profile/recruiterProfile";
@@ -31,6 +33,8 @@ function App() {
         <Route path="/applicantProfile" component={ApplicantProfile} />
         <Route path="/recruiterProfile" component={RecruiterProfile} />
         <Route path="/jobs" component={Jobs} />
+        <Route path="/myjobs" component={MyJobs} />
+        <Route path="/myjobapplications" component={MyJobApplications} />
         <Route path="/applications" component={MyApplications} />
       </div>
     </Router>

@@ -36,7 +36,7 @@ function Dashboard({ location, history }) {
       window.location = "/jobs";
     }
     if (user.type == "recruiter") {
-      window.location = "/profile";
+      window.location = "/myjobapplications";
     }
   } else {
     history.push("/login");

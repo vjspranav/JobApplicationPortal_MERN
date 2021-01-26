@@ -126,24 +126,31 @@ router.get("/getMyJobs", auth, async (req, res) => {
 // Get all applications of the applicant
 router.get("/getMyApplications", auth, async (req, res) => {
   let curUser = req.user;
-  if (req.user.type != "applicant") {
-    return res.status(401).json({
-      username: curUser.username,
-      type: curUser.type,
-      status: "Not an applicant",
+  if (req.user.type == "applicant") {
+    let applicant = curUser.username;
+    Application.find({ applicant }, (err, applications) => {
+      var applicationMap = {};
+      console.log(applications, applicant);
+      if (applications)
+        applications.forEach((application) => {
+          applicationMap[application._id] = application;
+        });
+
+      res.status(200).json({ applications: applicationMap });
+    });
+  } else {
+    let recruiter = curUser.username;
+    Application.find({ recruiter }, (err, applications) => {
+      var applicationMap = {};
+      console.log(applications, recruiter);
+      if (applications)
+        applications.forEach((application) => {
+          applicationMap[application._id] = application;
+        });
+
+      res.status(200).json({ applications: applicationMap });
     });
   }
-  let applicant = curUser.username;
-  Application.find({ applicant }, (err, applications) => {
-    var applicationMap = {};
-    console.log(applications, applicant);
-    if (applications)
-      applications.forEach((application) => {
-        applicationMap[application._id] = application;
-      });
-
-    res.status(200).json({ applications: applicationMap });
-  });
 });
 
 // POST request
