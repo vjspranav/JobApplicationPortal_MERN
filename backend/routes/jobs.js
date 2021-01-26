@@ -190,6 +190,7 @@ router.post("/createApplication", auth, async (req, res) => {
     jobTitle,
     sop,
     date,
+    acceptDate: date,
     status: "Applied",
   });
 
@@ -250,14 +251,19 @@ router.post("/updateApplicationStatus", auth, async (req, res) => {
   Application.findOneAndUpdate({ _id: application_id }, { status }).then(
     (application) => {
       if (status == "accepted") {
-        console.log(applications);
+        let acceptDate = new Date(); // For updating join date
+        Application.findOneAndUpdate(
+          { _id: application_id },
+          { acceptDate }
+        ).then((result) => console.log(result));
+        //console.log(applications);
         console.log("Let's see results");
         applications.forEach((application) => {
           Application.findOneAndUpdate(
             { _id: application._id },
             { status: "rejected" }
           ).then((result) => {
-            console.log(result);
+            console.log("Updated");
           });
         });
       }

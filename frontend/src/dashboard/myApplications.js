@@ -135,7 +135,7 @@ function MyApplications({ location, history }) {
                       </TableCell>
                       <TableCell align="center">
                         {application.status == "accepted"
-                          ? application.date
+                          ? application.acceptDate
                           : "Not Applicable"}{" "}
                       </TableCell>
                       <TableCell align="center">

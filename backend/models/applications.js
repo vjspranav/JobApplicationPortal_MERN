@@ -27,6 +27,10 @@ const ApplicationSchema = new Schema({
     type: Date,
     required: true,
   },
+  acceptDate: {
+    type: Date,
+    required: true,
+  },
   status: {
     type: String,
     required: true,
