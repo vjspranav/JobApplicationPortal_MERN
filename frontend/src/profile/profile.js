@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function Dashboard({ location, history }) {
+function Profile({ location, history }) {
   let [isLoading, setLoading] = useState(true);
   let [user, setUser] = useState("");
   let token = sessionStorage.getItem("auth-token");
@@ -28,12 +28,16 @@ function Dashboard({ location, history }) {
       });
   }, []);
   console.log(token);
+
   if (isLoading) {
     return <div className="App">Loading...</div>;
   }
+
   if (user) {
     if (user.type == "applicant") {
-      window.location = "/jobs";
+      window.location = "/applicantProfile";
+    } else {
+      window.location = "/recruiterProfile";
     }
   } else {
     history.push("/login");
@@ -41,4 +45,4 @@ function Dashboard({ location, history }) {
   }
 }
 
-export { Dashboard };
+export { Profile };

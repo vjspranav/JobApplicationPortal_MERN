@@ -122,15 +122,24 @@ router.get("/getMyUser", auth, async (req, res) => {
 // });
 
 // POST request
-// Update Contact Number
-router.post("/updateNumber", auth, (req, res) => {
-  const username = req.body.username;
-  const contact_number = req.body.contact_number;
-  console.log(username, contact_number);
-  if (req.user.username != username) {
-    return res.status(401).json({ msg: "Unauthorized access" });
-  }
-  User.findOneAndUpdate({ username }, { contact_number }, (err, result) => {
+// Update Name
+router.post("/updateName", auth, (req, res) => {
+  const username = req.user.username;
+  const name = req.body.name;
+  console.log(username, name);
+
+  User.findOneAndUpdate({ username }, { name }, (err, result) => {
+    err ? res.status(500).json({ err }) : res.status(200).json({ result });
+  });
+});
+
+// POST request
+// Update email
+router.post("/updateEmail", auth, (req, res) => {
+  const username = req.user.username;
+  const email = req.body.email;
+  console.log(username, email);
+  User.findOneAndUpdate({ username }, { email }, (err, result) => {
     err ? res.status(500).json({ err }) : res.status(200).json({ result });
   });
 });

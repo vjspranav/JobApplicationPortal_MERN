@@ -1,9 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
-function Dashboard({ location, history }) {
+function RecruiterProfile({ location, history }) {
   let [isLoading, setLoading] = useState(true);
   let [user, setUser] = useState("");
   let token = sessionStorage.getItem("auth-token");
@@ -28,17 +27,18 @@ function Dashboard({ location, history }) {
       });
   }, []);
   console.log(token);
+
   if (isLoading) {
     return <div className="App">Loading...</div>;
   }
+
   if (user) {
-    if (user.type == "applicant") {
-      window.location = "/jobs";
+    if (user.type != "recruiter") {
+      alert("Not a recruiter");
+      window.location = "/dashboard";
     }
-  } else {
-    history.push("/login");
-    return <h1>Redirecting to login</h1>;
   }
+  return <h1>RecruiterProfile</h1>;
 }
 
-export { Dashboard };
+export { RecruiterProfile };

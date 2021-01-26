@@ -181,7 +181,15 @@ function Jobs({ location, history }) {
                         {job.rating ? job.rating : "unrated"}
                       </TableCell>
                       <TableCell align="center">
-                        <button>Apply</button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            console.log("Minsal, MaxSal: ");
+                          }}
+                        >
+                          Apply
+                        </Button>
                       </TableCell>
                     </StyledTableRow>
                   ))}
@@ -190,6 +198,31 @@ function Jobs({ location, history }) {
             </TableContainer>
           </Paper>
         </Grid>
+        <Button
+          color="primary"
+          onClick={() => {
+            window.location = "/profile";
+          }}
+        >
+          My Profile{" "}
+        </Button>
+        <Button
+          color="primary"
+          onClick={() => {
+            window.location = "/applications";
+          }}
+        >
+          My Applications
+        </Button>
+        <Button
+          color="secondary"
+          onClick={() => {
+            sessionStorage.setItem("auth-token", "");
+            window.location = "/login";
+          }}
+        >
+          Logout
+        </Button>
       </Grid>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 //import "./components/templates/node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 import Navbar from "./components/templates/Navbar";
@@ -7,9 +7,11 @@ import { Login } from "./accounts/Login";
 import { Register } from "./accounts/Register";
 import Test from "./Test";
 import { Dashboard } from "./dashboard/dashboard";
-import { RecruiterProfile } from "./dashboard/applicantProfile";
-import { ApplicantProfile } from "./dashboard/recruiterProfile";
 import { Jobs } from "./dashboard/jobs";
+import { Profile } from "./profile/profile";
+import { ApplicantProfile } from "./profile/applicantProfile";
+import { RecruiterProfile } from "./profile/recruiterProfile";
+
 function App() {
   let [token, setToken] = useState(sessionStorage.getItem("auth-token"));
   useEffect(() => {
@@ -24,6 +26,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/test" component={Test} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/profile" component={Profile} />
         <Route path="/applicantProfile" component={ApplicantProfile} />
         <Route path="/recruiterProfile" component={RecruiterProfile} />
         <Route path="/jobs" component={Jobs} />
