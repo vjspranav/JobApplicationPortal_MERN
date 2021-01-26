@@ -13,6 +13,7 @@
         "bootstrap": "^4.5.3",
         "formik": "^2.2.6",
         "material-ui": "^0.20.2",
+        "material-ui-phone-number": "^2.2.6",
         "react": "^17.0.1",
         "react-bootstrap": "^1.4.3",
         "react-dom": "^17.0.1",

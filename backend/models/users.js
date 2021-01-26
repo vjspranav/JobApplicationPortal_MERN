@@ -30,7 +30,7 @@ const UserSchema = new Schema({
     required: true,
   },
   contact_number: {
-    type: Number,
+    type: String,
     required: false,
   },
   date: {

@@ -35,6 +35,9 @@ function Dashboard({ location, history }) {
     if (user.type == "applicant") {
       window.location = "/jobs";
     }
+    if (user.type == "recruiter") {
+      window.location = "/profile";
+    }
   } else {
     history.push("/login");
     return <h1>Redirecting to login</h1>;

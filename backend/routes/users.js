@@ -103,6 +103,15 @@ router.get("/getMyUserApplicant", auth, async (req, res) => {
   return res.status(200).send({ applicant: curApplicant });
 });
 
+// GET request
+// Get Current UserApplicant Details
+router.get("/getMyUserRecruiter", auth, async (req, res) => {
+  let curUser = req.user;
+  let curRecruiter = await Recruiter.findOne({ username: curUser.username });
+  console.log(curRecruiter);
+  return res.status(200).send({ recruiter: curRecruiter });
+});
+
 // POST request
 // Token Validation
 // router.post("/tokenIsValid", async (req, res) => {
@@ -149,6 +158,17 @@ router.post("/updateEmail", auth, (req, res) => {
   const email = req.body.email;
   console.log(username, email);
   User.findOneAndUpdate({ username }, { email }, (err, result) => {
+    err ? res.status(500).json({ err }) : res.status(200).json({ result });
+  });
+});
+
+// POST request
+// Update number
+router.post("/updateNumber", auth, (req, res) => {
+  const username = req.user.username;
+  const contact_number = req.body.number;
+  console.log(username, contact_number);
+  User.findOneAndUpdate({ username }, { contact_number }, (err, result) => {
     err ? res.status(500).json({ err }) : res.status(200).json({ result });
   });
 });

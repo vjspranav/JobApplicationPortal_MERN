@@ -14,6 +14,25 @@ const ApplicantRating = require("../models/ratings");
 router.post("/rateApplicant", auth, function (req, res) {
   let curUser = req.user;
   let username = req.body.username;
+  let bio = req.body.bio;
+
+  if (req.user.type != "recruiter") {
+    return res.status(401).json({
+      username: curUser.username,
+      type: curUser.type,
+      status: "Not a recruiter cannot update Bio",
+    });
+  }
+  console.log(username, bio);
+  Recruiter.findOneAndUpdate({ username }, { bio }, (err, result) => {
+    err ? res.status(500).json({ err }) : res.status(200).json({ result });
+  });
+});
+
+/* POST Request for adding rating to user */
+router.post("/rateApplicant", auth, function (req, res) {
+  let curUser = req.user;
+  let username = req.body.username;
   let rating = req.body.rating;
 
   if (!username || !rating) {
