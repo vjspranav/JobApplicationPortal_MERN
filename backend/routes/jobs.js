@@ -6,6 +6,7 @@ const auth = require("../auth/Auth");
 const Job = require("../models/jobs");
 const Application = require("../models/applications");
 const Applicant = require("../models/applicants");
+const { application } = require("express");
 // POST request
 // Add a job to db
 router.post("/createJob", auth, (req, res) => {
@@ -217,6 +218,55 @@ router.post("/createApplication", auth, async (req, res) => {
     .catch((err) => {
       res.status(400).send(err);
     });
+});
+
+// POST request
+// Applyfor a job
+router.post("/updateApplicationStatus", auth, async (req, res) => {
+  var curUser = req.user;
+  if (req.user.type != "recruiter") {
+    return res.status(401).json({
+      username: curUser.username,
+      type: curUser.type,
+      status: "Recruiter cannot change status",
+    });
+  }
+  let application_id = req.body.application_id;
+  let curApplicant = req.body.applicant;
+  let status = req.body.status;
+  let job = await Job.findOne({ _id: req.body.job_id });
+  let applications = await Application.find({
+    $and: [{ _id: { $ne: application_id } }, { applicant: curApplicant }],
+  });
+  //console.log(applications);
+  if (job.author.username != curUser.username) {
+    return res.status(401).json({
+      username: curUser.username,
+      type: curUser.type,
+      status: "Job Not Posted by you",
+    });
+  }
+
+  Application.findOneAndUpdate({ _id: application_id }, { status }).then(
+    (application) => {
+      if (status == "accepted") {
+        console.log(applications);
+        console.log("Let's see results");
+        applications.forEach((application) => {
+          Application.findOneAndUpdate(
+            { _id: application._id },
+            { status: "rejected" }
+          ).then((result) => {
+            console.log(result);
+          });
+        });
+      }
+      res.status(200).json({ status: "Status Updated Successfully" });
+    },
+    (err, result) => {
+      err ? res.status(500).json({ err }) : res.status(200).json(result);
+    }
+  );
 });
 
 module.exports = router;

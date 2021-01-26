@@ -76,10 +76,10 @@ function MyApplications({ location, history }) {
                 },
                 null
               )
-              .then((response) => {
+              .then(async (response) => {
                 console.log(response.status);
                 setApplicant(response.data.applicant);
-                axios
+                await axios
                   .post("http://localhost:4000/jobs/getJobs")
                   .then((response) => setJobs(response.data.jobs));
                 setLoading(false);
